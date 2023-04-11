@@ -4,17 +4,22 @@ import { useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import Image from "next/image";
 import bgImg from "../public/background/lukasz-lada-LtWFFVi1RXQ-unsplash.jpg";
+import Loading from "@/components/Loading";
 
 export default function Home() {
   const [weather, setWeather] = useState({});
-  const [city, setCity] = useState("");
+  const [city, setCity] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}`;
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&lang=en&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}`;
 
   const fetchWeather = (e) => {
     e.preventDefault();
     setLoading(true);
+    if (!city) {
+      setLoading(false);
+      return;
+    };
     axios
       .get(url)
       .then((res) => {
@@ -61,12 +66,47 @@ export default function Home() {
               type="text"
               className="p-2 w-10/12 sm:w-full sm:text-2xl  bg-transparent border-none focus:outline-none placeholder:text-white text-white mx-2"
               placeholder="Enter City Name..."
+              required
             />
           </div>
           <button onClick={fetchWeather}>
             <BsSearch size={20} />
           </button>
         </form>
+      </div>
+
+      {/*Weather Card*/}
+      <div className="relative flex justify-center items-center sm:max-w-max md:max-w-[600px] w-full h-full p-auto z-10 m-auto">
+        {loading ? (
+          <Loading />
+        ) : (
+          weather.main && (
+            <div className="w-full h-50 sm:flex sm:justify-between text-white mx-8 p-2 sm:p-5 bg-transparent border border-gray-400 rounded-2xl">
+              <div className="flex flex-col justify-center items-center py-20 sm:py-10 md:p-10">
+                <h1 className="text-4xl sm:text-lg md:text-2xl font-bold">
+                  {weather.name}
+                </h1>
+                <h1 className="text-4xl sm:text-lg md:text-2xl font-bold">
+                  {Math.round(weather.main.temp)}°F
+                </h1>
+                <h1 className="text-4xl sm:text-lg md:text-2xl font-bold">
+                  {weather.weather[0].main}
+                </h1>
+              </div>
+              <div className="flex flex-col justify-center items-center py-20 sm:py-10  md:p-10">
+                <h1 className="text-3xl sm:text-lg md:text-2xl font-bold">
+                  Feels Like: {Math.round(weather.main.feels_like)}°F
+                </h1>
+                <h1 className="text-3xl sm:text-lg md:text-2xl font-bold">
+                  Humidity: {weather.main.humidity}%
+                </h1>
+                <h1 className="text-3xl sm:text-lg md:text-2xl font-bold">
+                  Wind: {weather.wind.speed}mph
+                </h1>
+              </div>
+            </div>
+          )
+        )}
       </div>
     </div>
   );
