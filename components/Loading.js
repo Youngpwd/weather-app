@@ -3,8 +3,8 @@ import { BiLoaderCircle } from "react-icons/bi";
 
 const Loading = () => {
   return (
-    <div className="flex justify-center items-center">
-      <BiLoaderCircle className="animate-spin text-4xl text-white" />
+    <div className="flex h-[500px] justify-center items-center my-auto">
+      <BiLoaderCircle className="animate-spin text-9xl text-black" />
     </div>
   );
 };
