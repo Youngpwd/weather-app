@@ -4,6 +4,7 @@ import { useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import Image from "next/image";
 import bgImg from "../public/background/lukasz-lada-LtWFFVi1RXQ-unsplash.jpg";
+import Weather from "@/components/Weather";
 import Loading from "@/components/Loading";
 
 export default function Home() {
@@ -19,7 +20,7 @@ export default function Home() {
     if (!city) {
       setLoading(false);
       return;
-    };
+    }
     axios
       .get(url)
       .then((res) => {
@@ -75,39 +76,11 @@ export default function Home() {
         </form>
       </div>
 
+      {/*Loading*/}
+      {loading && <Loading />}
+
       {/*Weather Card*/}
-      <div className="relative flex justify-center items-center sm:max-w-max md:max-w-[600px] w-full h-full p-auto z-10 m-auto">
-        {loading ? (
-          <Loading />
-        ) : (
-          weather.main && (
-            <div className="w-full h-50 sm:flex sm:justify-between text-white mx-8 p-2 sm:p-5 bg-transparent border border-gray-400 rounded-2xl">
-              <div className="flex flex-col justify-center items-center py-20 sm:py-10 md:p-10">
-                <h1 className="text-4xl sm:text-lg md:text-2xl font-bold">
-                  {weather.name}
-                </h1>
-                <h1 className="text-4xl sm:text-lg md:text-2xl font-bold">
-                  {Math.round(weather.main.temp)}°F
-                </h1>
-                <h1 className="text-4xl sm:text-lg md:text-2xl font-bold">
-                  {weather.weather[0].main}
-                </h1>
-              </div>
-              <div className="flex flex-col justify-center items-center py-20 sm:py-10  md:p-10">
-                <h1 className="text-3xl sm:text-lg md:text-2xl font-bold">
-                  Feels Like: {Math.round(weather.main.feels_like)}°F
-                </h1>
-                <h1 className="text-3xl sm:text-lg md:text-2xl font-bold">
-                  Humidity: {weather.main.humidity}%
-                </h1>
-                <h1 className="text-3xl sm:text-lg md:text-2xl font-bold">
-                  Wind: {weather.wind.speed}mph
-                </h1>
-              </div>
-            </div>
-          )
-        )}
-      </div>
+      {weather.main && <Weather weather={weather} />}
     </div>
   );
 }
